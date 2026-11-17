@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { @apply bg-white font-sans text-navy antialiased; line-height: 1.7; }
+h1, h2, h3 { line-height: 1.3; letter-spacing: -0.01em; }
+:focus-visible { outline: 3px solid #1FAE5B; outline-offset: 2px; border-radius: 6px; }
+
+@layer components {
+  .container-page { @apply mx-auto w-full max-w-page px-4 sm:px-6; }
+  .section { @apply py-14 sm:py-20; }
+  .btn { @apply inline-flex min-h-[46px] items-center justify-center gap-2 rounded-pill px-6 text-[15px] font-semibold transition-colors duration-200; }
+  .btn-primary { @apply btn bg-brand text-white hover:bg-brand-dark; }
+  .btn-dark { @apply btn bg-navy text-white hover:bg-navy-2; }
+  .btn-outline { @apply btn border border-navy/25 bg-white text-navy hover:border-brand hover:text-brand-dark; }
+  .field { @apply w-full rounded-2xl border border-line bg-white px-4 py-3 text-[15px] text-navy placeholder:text-navy/45 focus:border-brand; }
+  .card { @apply rounded-card border border-line bg-white; }
+  .prose-page p { @apply mb-4 text-navy/80; }
+  .prose-page h2 { @apply mb-3 mt-8 text-xl font-semibold; }
+  .prose-page ul { @apply mb-4 list-disc space-y-2 pl-6 text-navy/80; }
+}
+/* Folder-tab shape on product cards: the one memorable motif of the site */
+.folder { position: relative; }
+.folder::before { content: ""; position: absolute; top: -9px; left: 22px; width: 64px; height: 12px; background: #fff; border: 1px solid #DCE6DF; border-bottom: 0; border-radius: 10px 10px 0 0; transition: border-color .2s; }
+.folder:hover::before, .folder:focus-within::before { border-color: #0C7C3E; }
+.reveal { opacity: 0; transform: translateY(8px); transition: opacity .5s ease, transform .5s ease; }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
