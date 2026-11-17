@@ -1,26 +1,27 @@
-import type { Metadata, Viewport } from "next";
-import "@fontsource/poppins/latin-400.css";
-import "@fontsource/poppins/latin-500.css";
-import "@fontsource/poppins/latin-600.css";
-import "@fontsource/poppins/latin-700.css";
-import "@fontsource/hind-siliguri/bengali-400.css";
-import "@fontsource/hind-siliguri/bengali-500.css";
-import "@fontsource/hind-siliguri/bengali-600.css";
-import "@fontsource/hind-siliguri/bengali-700.css";
-import "./globals.css";
+import { notFound } from "next/navigation";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import FloatingActions from "@/components/FloatingActions";
+import { LANGS, isLang, t } from "@/lib/i18n";
+import { catList } from "@/lib/data";
 import { SITE } from "@/lib/site";
+import { jsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE.url),
-  title: { default: `${SITE.name} | ${SITE.tagline}`, template: `%s | ${SITE.name}` },
-  icons: { icon: [{ url: "/favicon.svg", type: "image/svg+xml" }, { url: "/favicon-32.png", sizes: "32x32" }], apple: "/apple-touch-icon.png" },
-};
-export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#0C7C3E" };
+export const dynamicParams = false;
+export function generateStaticParams() { return LANGS.map((lang) => ({ lang })); }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function LangLayout({ children, params }: { children: React.ReactNode; params: { lang: string } }) {
+  if (!isLang(params.lang)) notFound();
+  const lang = params.lang;
+  const org = { "@context": "https://schema.org", "@type": "Organization", name: SITE.name, url: SITE.url, logo: `${SITE.url}/icon-512.png`, email: SITE.email, telephone: SITE.phone, sameAs: [SITE.facebook], slogan: SITE.tagline };
   return (
-    <html lang="bn">
-      <body>{children}</body>
-    </html>
+    <div lang={lang}>
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-pill focus:bg-navy focus:px-4 focus:py-2 focus:text-white">{t(lang, "মূল কনটেন্টে যান", "Skip to content")}</a>
+      <Header lang={lang} cats={catList(lang)} />
+      <main id="main">{children}</main>
+      <Footer lang={lang} />
+      <FloatingActions lang={lang} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(org)} />
+    </div>
   );
 }
